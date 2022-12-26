@@ -2,11 +2,12 @@ package com.muhardin.endy.belajar.belajartimezone.controller;
 
 import com.muhardin.endy.belajar.belajartimezone.dao.JadwalDao;
 import com.muhardin.endy.belajar.belajartimezone.entity.Jadwal;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -21,6 +22,7 @@ public class TimezoneDemoController {
 
     @GetMapping("/")
     public Map<String, Object> printNow() {
+
         Map<String, Object> result = new LinkedHashMap<>();
 
         ZoneId currentTimezone = ZoneId.systemDefault();
@@ -35,16 +37,16 @@ public class TimezoneDemoController {
         result.put("Current Timezone", currentTimezone);
         result.put("Server Time", now);
         result.put("Server Time (Asia/Jakarta)", nowJakarta);
-        result.put("Server Time from LocalDateTime (Asia/Jakarta)",
-                LocalDateTime.now(jakartaTimezone).toLocalTime());
+        result.put("Server Time from LocalDateTime (Asia/Jakarta)", LocalDateTime.now(jakartaTimezone).toLocalTime());
         result.put("Open Time", openTime);
         result.put("Close Time", closeTime);
         result.put("Is now open?", (now.isAfter(openTime) && now.isBefore(closeTime)));
         result.put("Is now (Asia/Jakarta) open?", (nowJakarta.isAfter(openTime) && nowJakarta.isBefore(closeTime)));
 
-        result.put("Daftar Jadwal", jadwalDao.findAll());
+        result.put("Daftar Jadwal", jadwalDao.findAll(Pageable.ofSize(8)));
 
         return result;
+
     }
 
     @PostMapping("/jadwal")
@@ -52,4 +54,5 @@ public class TimezoneDemoController {
     public void saveJadwal(@RequestBody @Valid Jadwal jadwal) {
         jadwalDao.save(jadwal);
     }
+
 }

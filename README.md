@@ -6,6 +6,24 @@ Normalnya, timezone diset di sistem operasi. Idealnya timezone di server diset k
 
 ## Cara Menjalankan Aplikasi ##
 
+* Jalankan postgre sql di docker
+
+    ```
+    sudo docker run --rm \
+    --name timezone-db \
+    -e POSTGRES_DB=timezonedb \
+    -e POSTGRES_USER=timezone \
+    -e POSTGRES_PASSWORD=timezone123 \
+    -e PGDATA=/var/lib/postgresql/data/pgdata \
+    -v "$PWD/timezone-data:/var/lib/postgresql/data" \
+    -p 5432:5432 \
+    postgres:15
+    ```
+  
+    ```
+    psql -h 127.0.0.1 -U timezone timezonedb
+    ```
+
 * Menggunakan timezone sesuai yang diset sistem operasi
 
     ```
